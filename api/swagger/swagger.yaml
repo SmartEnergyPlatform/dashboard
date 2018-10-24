@@ -1,0 +1,278 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: SEPL Dashboard
+host: localhost:8080
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /view:
+    x-swagger-router-controller: view
+    get:
+      description: Returns all views to the caller.
+      operationId: getViews
+      responses:
+        200:
+          description: A view array.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ViewResponse"
+        404:
+          description: No views were found.      
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Creates a new view.
+      operationId: addView
+      parameters:
+        - in: body
+          name: view
+          required: true
+          description: The view to create.
+          schema:
+            $ref: "#/definitions/ViewRequest"
+      responses:
+        201:
+          description: Created
+          schema:
+              $ref: "#/definitions/ViewResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /view/{id}:
+    x-swagger-router-controller: view
+    get:
+      description: Returns an existing view to the caller.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the view to return.
+      operationId: getView
+      responses:
+        200:
+          description: A view object.
+          schema:
+            $ref: "#/definitions/ViewResponse"
+        404:
+          description: A view with the specified ID was not found.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Updates a existing view.
+      operationId: updateView
+      parameters:
+        - in: body
+          name: view
+          required: true
+          description: The view to update.
+          schema:
+            $ref: "#/definitions/ViewRequest"
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the view to update    
+      responses:
+        204:
+          description: Updated
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Deletes a existing view.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the view to delete.
+      operationId: deleteView
+      responses:
+        204:
+          description: View deleted successfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /widget:
+    x-swagger-router-controller: widget
+    get:
+      description: Returns all existing widgets to the caller.
+      operationId: getWidgets
+      responses:
+        200:
+          description: A widget array.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/WidgetResponse"
+        404:
+          description: No widgets were found.      
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Creates a new widget.
+      operationId: addWidget
+      parameters:
+        - in: body
+          name: widget
+          required: true
+          description: The widget to create.
+          schema:
+            $ref: "#/definitions/WidgetRequest"
+      responses:
+        201:
+          description: Created
+          schema:
+              $ref: "#/definitions/WidgetResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /widget/{id}:
+    x-swagger-router-controller: widget
+    get:
+      description: Returns an existing widget to the caller.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the widget to return.
+      operationId: getWidget
+      responses:
+        200:
+          description: A widget object.
+          schema:
+            $ref: "#/definitions/WidgetResponse"
+        404:
+          description: A widget with the specified ID was not found.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Updates a existing widget.
+      operationId: updateWidget
+      parameters:
+        - in: body
+          name: widget
+          required: true
+          description: The widget to update.
+          schema:
+            $ref: "#/definitions/WidgetRequest"
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the widget to update    
+      responses:
+        204:
+          description: Updated
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Deletes a existing widget.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: The ID of the widget to delete.
+      operationId: deleteWidget
+      responses:
+        204:
+          description: Widget deleted successfully.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ViewResponse:
+    properties:
+      _id:
+        type: string
+        example: 522ewb244134affq32
+      title:
+        type: string
+        example: Living Room
+      widgets:
+        type: array
+        items:
+              $ref: "#/definitions/WidgetResponse"
+  ViewRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        example: Consumption over time
+      imgurl:
+        type: string
+        example: https://www.google.de/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png
+    required:
+      - title
+  WidgetResponse:
+    properties:
+      _id:
+        type: string
+        example: 522ewb244134affq32
+      title:
+        type: string
+        example: Consumption over time
+      type:
+        type: string
+      index:
+        type: integer
+      frame:
+        type: integer
+      source:
+        type: object
+      view:
+        type: string
+  WidgetRequest:
+    type: object
+    properties:
+      title:
+        type: string
+        example: Consumption over time
+      type:
+        type: string
+      index:
+        type: integer
+      frame:
+        type: integer
+      source:
+        type: object
+      view:
+        type: string
+    required:
+      - type
+      - source
+      - index
